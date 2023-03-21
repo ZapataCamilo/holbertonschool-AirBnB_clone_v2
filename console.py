@@ -73,7 +73,7 @@ class HBNBCommand(cmd.Cmd):
                 pline = pline[2].strip()  # pline is now str
                 if pline:
                     # check for *args or **kwargs
-                    if pline[0] is '{' and pline[-1] is '}'\
+                    if pline[0] == '{' and pline[-1] == '}'\
                             and type(eval(pline)) is dict:
                         _args = pline
                     else:
@@ -116,12 +116,12 @@ class HBNBCommand(cmd.Cmd):
     def do_create(self, arg):
         """ Create an object of any class"""
         if not arg:
-            print("** class name missing **")
+            print('** class name missing **')
             return
 
         args = arg.split()
         if args[0] not in self.classes:
-            print("** class doesn´t exist **")
+            print("** class doesn't exist **")
             return
 
         obj = eval(args[0])()
@@ -129,7 +129,7 @@ class HBNBCommand(cmd.Cmd):
             try:
                 key, value = param.split("=", 1)
                 if value.startswith('"'):
-                    value = value[1:-1].replace("_", " ").replace('\\', '"')
+                    value = value[1:-1].replace("_", " ").replace('\\"', '"')
                 elif "." in value:
                     value = float(value)
                 else:
@@ -137,8 +137,8 @@ class HBNBCommand(cmd.Cmd):
                 setattr(obj, key, value)
             except Exception:
                 pass
-            obj.save()
-            print(obj.id)
+        obj.save()
+        print(obj.id)
 
     def help_create(self):
         """ Help information for the create method """
@@ -286,7 +286,7 @@ class HBNBCommand(cmd.Cmd):
                 args.append(v)
         else:  # isolate args
             args = args[2]
-            if args and args[0] is '\"':  # check for quoted arg
+            if args and args[0] == '\"':  # check for quoted arg
                 second_quote = args.find('\"', 1)
                 att_name = args[1:second_quote]
                 args = args[second_quote + 1:]
