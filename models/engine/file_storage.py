@@ -56,12 +56,9 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """
-        Delete obj from __objects if itf´s inside
-        """
-        if obj == None:
+        '''Deletes an object from FileStorage.__objects'''
+        if not obj:
             return
-        key = '{}.{}'.format(type(obj).__name__, obj.id)
-        if key in self.__objects:
-            del self.__objects[key]
-            self.save()
+        if obj in FileStorage.__objects.values():
+            del FileStorage.__objects[obj.to_dict()['__class__'] +
+                                      '.' + obj.id]
