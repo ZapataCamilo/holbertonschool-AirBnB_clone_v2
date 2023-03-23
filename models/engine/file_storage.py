@@ -1,77 +1,73 @@
 #!/usr/bin/python3
-"""This module defines a class to manage db storage for hbnb clone"""
-from sqlalchemy import create_engine, MetaData
-from sqlalchemy.orm import Session
-import os
+"""This module defines a class to manage file storage for hbnb clone"""
+import json
+from models.user import User
+from models.city import City
+from models.state import State
+from models.review import Review
+from models.amenity import Amenity
+from models.base_model import BaseModel
 
 
-class DBStorage:
-    ''' This class manages all database storage for HBnB '''
-    __engine = None
-    __session = None
+class FileStorage:
+    """This class manages storage of hbnb models in JSON format"""
+    __file_path = 'file.json'
+    __objects = {}
 
-    def __init__(self):
-        ''' Init method for dbstorage'''
-        user = os.getenv('HBNB_MYSQL_USER')
-        pwd = os.getenv('HBNB_MYSQL_PWD')
-        host = os.getenv('HBNB_MYSQL_HOST')
-        db = os.getenv('HBNB_MYSQL_DB')
-        self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".format(
-            user, pwd, host, db), pool_pre_ping=True)
-        metadata = MetaData()
-        if os.getenv('HBNB_ENV') == 'test':
-            metadata.drop_all()
+    def cities(self, state_id):
+        """Returns a list of City"""
+        cities = []
+        for city in self.all(City).values():
+            if city.state_id == state_id:
+                cities.append(city)
+        return cities
 
     def all(self, cls=None):
-        ''' Returns all cls in DB, or all objects in DB, as a dict'''
-        self.__session = Session(self.__engine)
-        ret_dict = dict()
-        if cls:
-            for obj in self.__session.query(cls).all():
-                ret_dict[obj.to_dict()['__class__'] + '.' + obj.id] = obj
+        """returns the list of objects of one type of class."""
+        if cls != None:
+            new_dict = {}
+            for key, val in self.__objects.items():
+                if cls == val.__class__:
+                    new_dict[key] = val
+            return new_dict
         else:
-            from models.user import User
-            from models.place import Place
-            from models.state import State
-            from models.city import City
-            from models.amenity import Amenity
-            from models.review import Review
-
-            class_list = [State, City, User, Place, Review, Amenity]
-            for query_cls in class_list:
-                for obj in self.__session.query(query_cls).all():
-                    ret_dict[obj.to_dict()['__class__'] + '.' + obj.id] = obj
-        return ret_dict
+            return self.__objects
 
     def new(self, obj):
-        ''' Add obj to session '''
-        self.__session.add(obj)
+        """Adds new object to storage dictionary"""
+        self.all().update({obj.to_dict()['__class__'] + '.' + obj.id: obj})
 
     def save(self):
-        ''' Commit new previous additions '''
-        self.__session.commit()
-
-    def delete(self, obj=None):
-        ''' Deletes obj if exists '''
-        if obj:
-            self.__session.delete(obj)
+        """Saves storage dictionary to file"""
+        with open(FileStorage.__file_path, 'w') as f:
+            temp = {}
+            temp.update(FileStorage.__objects)
+            for key, val in temp.items():
+                temp[key] = val.to_dict()
+            json.dump(temp, f)
 
     def reload(self):
-        ''' Creates all tables from DB '''
-        from models.base_model import BaseModel, Base
-        from models.user import User
+        """Loads storage dictionary from file"""
         from models.place import Place
-        from models.state import State
-        from models.city import City
-        from models.amenity import Amenity
-        from models.review import Review
-        from sqlalchemy.orm import sessionmaker, scoped_session
-        Base.metadata.create_all(self.__engine)
-        session_factory = sessionmaker(bind=self.__engine,
-                                       expire_on_commit=False)
-        Session = scoped_session(session_factory)
-        self.__session = Session()
+        classes = {
+            'BaseModel': BaseModel, 'User': User, 'Place': Place,
+            'State': State, 'City': City, 'Amenity': Amenity,
+            'Review': Review
+        }
+        try:
+            temp = {}
+            with open(FileStorage.__file_path, 'r') as f:
+                temp = json.load(f)
+                for key, val in temp.items():
+                    self.all()[key] = classes[val['__class__']](**val)
+        except FileNotFoundError:
+            pass
 
-    def close(self):
-        '''Required to update HBNB using Flask'''
-        Session.close(self.__session)
+    def delete(self, obj=None):
+        """to delete obj from __objects if it's inside
+         - if obj is equal to None"""
+        if obj != None:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            if key in self.__objects:
+                del self.__objects[key]
+                self.save()
