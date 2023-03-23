@@ -1,70 +1,77 @@
 #!/usr/bin/python3
-"""Engine DBStorage"""
+"""This module defines a class to manage db storage for hbnb clone"""
+from sqlalchemy import create_engine, MetaData
+from sqlalchemy.orm import Session
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import scoped_session, sessionmaker, session
-from models.base_model import Base
-from models.user import User
-from models.city import City
-from models.state import State
-from models.place import Place
-from models.review import Review
-from models.amenity import Amenity
 
 
 class DBStorage:
-    """DBStorge Class"""
+    ''' This class manages all database storage for HBnB '''
     __engine = None
     __session = None
 
     def __init__(self):
-        """Crate Engine"""
+        ''' Init method for dbstorage'''
         user = os.getenv('HBNB_MYSQL_USER')
-        password = os.getenv('HBNB_MYSQL_PWD')
-        host = os.getenv('HBNB_MYSQL_HOST', 'localhost')
-        database = os.getenv('HBNB_MYSQL_DB')
-
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}:3306/{}'.
-                                      format(user, password,
-                                             host, database),
-                                      pool_pre_ping=True)
-
+        pwd = os.getenv('HBNB_MYSQL_PWD')
+        host = os.getenv('HBNB_MYSQL_HOST')
+        db = os.getenv('HBNB_MYSQL_DB')
+        self.__engine = create_engine("mysql+mysqldb://{}:{}@{}/{}".format(
+            user, pwd, host, db), pool_pre_ping=True)
+        metadata = MetaData()
         if os.getenv('HBNB_ENV') == 'test':
-            Base.metadata.drop_all(self.__engine)
-
-        self.__session = scoped_session(sessionmaker(bind=self.__engine,
-                                                     expire_on_commit=False))
+            metadata.drop_all()
 
     def all(self, cls=None):
-        """query on the current database session all objects """
-        value = {}
+        ''' Returns all cls in DB, or all objects in DB, as a dict'''
+        self.__session = Session(self.__engine)
+        ret_dict = dict()
         if cls:
-            for obj in self.__session.query(cls):
-                key = '{}.{}'.format(type(obj).__name__, obj.id)
-                value[key] = obj
+            for obj in self.__session.query(cls).all():
+                ret_dict[obj.to_dict()['__class__'] + '.' + obj.id] = obj
         else:
-            for cls in [Amenity, City, Place, Review, State, User]:
-                for obj in self.__session.query(cls):
-                    key = '{}.{}'.format(type(obj).__name__, obj.id)
-                    value[key] = obj
-        return value
+            from models.user import User
+            from models.place import Place
+            from models.state import State
+            from models.city import City
+            from models.amenity import Amenity
+            from models.review import Review
+
+            class_list = [State, City, User, Place, Review, Amenity]
+            for query_cls in class_list:
+                for obj in self.__session.query(query_cls).all():
+                    ret_dict[obj.to_dict()['__class__'] + '.' + obj.id] = obj
+        return ret_dict
 
     def new(self, obj):
-        """add the object to the current database session"""
+        ''' Add obj to session '''
         self.__session.add(obj)
 
     def save(self):
-        """commit the object to the current database session"""
+        ''' Commit new previous additions '''
         self.__session.commit()
 
     def delete(self, obj=None):
-        """delete the object to the current database session"""
+        ''' Deletes obj if exists '''
         if obj:
             self.__session.delete(obj)
-            self.save()
 
     def reload(self):
-        """create all tables in the database"""
+        ''' Creates all tables from DB '''
+        from models.base_model import BaseModel, Base
+        from models.user import User
+        from models.place import Place
+        from models.state import State
+        from models.city import City
+        from models.amenity import Amenity
+        from models.review import Review
+        from sqlalchemy.orm import sessionmaker, scoped_session
         Base.metadata.create_all(self.__engine)
-        Session = sessionmaker(bind=self.__engine)
+        session_factory = sessionmaker(bind=self.__engine,
+                                       expire_on_commit=False)
+        Session = scoped_session(session_factory)
         self.__session = Session()
+
+    def close(self):
+        '''Required to update HBNB using Flask'''
+        Session.close(self.__session)
