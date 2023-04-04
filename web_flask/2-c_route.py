@@ -25,7 +25,7 @@ def hbnb():
 @app.route('/c/<username>')
 def show_user_profile(username):
     """
-    display “C ” followed by the value of the text variable 
+    display “C ” followed by the value of the text variable
     """
     # show the user profile for that user
     for i in username:
