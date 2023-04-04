@@ -21,7 +21,7 @@ def hbnb():
     return 'HBNB'
 
 
-@app.route('/c/<username>')
+@app.route('/c/<string:username>')
 def show_user_profile(username):
     """
     display “C ” followed by the value of the text variable
