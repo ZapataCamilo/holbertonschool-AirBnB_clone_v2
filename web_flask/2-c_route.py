@@ -28,8 +28,10 @@ def show_user_profile(username):
     display “C ” followed by the value of the text variable 
     """
     # show the user profile for that user
-    if username == 'is_fun':
-        username = 'is fun'
+    for i in username:
+        if i == '_':
+            user_rp = username.replace('_', ' ')
+            return f'C {user_rp}'
     return f'C {username}'
 
 
