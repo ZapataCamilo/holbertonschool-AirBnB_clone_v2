@@ -30,8 +30,7 @@ def show_user_profile(username):
     # show the user profile for that user
     for i in username:
         if i == '_':
-            user_rp = username.replace('_', ' ')
-            return f'C {user_rp}'
+            return f"C {username.replace('_', ' ')}"
     return f'C {username}'
 
 
