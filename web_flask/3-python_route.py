@@ -33,9 +33,8 @@ def show_user_profile(username):
     return f'C {username}'
 
 
-
-@app.route('/python', defaults={'text' : 'is cool'})
-@app.route('/python/', defaults={'text' : 'is cool'})
+@app.route('/python', defaults={'text': 'is cool'})
+@app.route('/python/', defaults={'text': 'is cool'})
 @app.route('/python/<text>')
 def txt(text='is cool'):
     """
