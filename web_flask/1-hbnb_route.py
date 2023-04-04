@@ -18,7 +18,7 @@ def hbnb():
     """
     Script that starts a Flask web application
     """
-    return 'HBNB' 
+    return 'HBNB'
 
 
 if __name__ == '__main__':
