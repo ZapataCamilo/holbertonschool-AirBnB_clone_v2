@@ -5,7 +5,7 @@ from flask import Flask
 app = Flask(__name__)
 
 
-@app.route('/')
+@app.route('/', strict_slashes=False)
 def index():
     """
     Script that starts a Flask web application
@@ -13,7 +13,7 @@ def index():
     return 'Hello HBNB!'
 
 
-@app.route('/hbnb')
+@app.route('/hbnb', strict_slashes=False)
 def hbnb():
     """
     Script that starts a Flask web application
@@ -21,7 +21,7 @@ def hbnb():
     return 'HBNB'
 
 
-@app.route('/c/<string:username>')
+@app.route('/c/<string:username>',strict_slashes=False)
 def show_user_profile(username):
     """
     display “C ” followed by the value of the text variable
@@ -33,9 +33,9 @@ def show_user_profile(username):
     return f'C {username}'
 
 
-@app.route('/python', defaults={'text': 'is cool'})
-@app.route('/python/', defaults={'text': 'is cool'})
-@app.route('/python/<text>')
+@app.route('/python', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python/', defaults={'text': 'is cool'}, strict_slashes=False)
+@app.route('/python/<text>', strict_slashes=False)
 def txt(text='is cool'):
     """
     script that starts a Flask web application:

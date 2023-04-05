@@ -62,5 +62,10 @@ def number_two(n=None):
     """
     return render_template('5-number.html', n=n)
 
+
+@app.route('/number_odd_or_even/<int:n>', strict_slashes=False)
+def eve_odd(n):
+    return render_template('6-number_odd_or_even.html', n=n)
+
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
