@@ -48,7 +48,15 @@ def txt(text='is cool'):
 
 
 @app.route('/number/<int:n>')
-def number(n=None):
+def number(n):
+    """
+    display “n is a number” only if n is an integer
+    """
+    return f'{n} is a number'
+
+
+@app.route('/number_template/<int:n>')
+def number_two(n=None):
     """
     display “n is a number” only if n is an integer
     """
