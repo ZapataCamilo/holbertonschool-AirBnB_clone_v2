@@ -8,22 +8,19 @@ from models import storage
 app = Flask(__name__)
 
 
-@app.route('/states',defaults={'id': None}, strict_slashes=False)
+@app.route('/states', defaults={'id': None}, strict_slashes=False)
 @app.route('/states/<path:id>', strict_slashes=False)
 def path_st_list(id):
     st = storage.all(State).values()
 
     if not id:
-        return render_template('7-states_list.html', items=st)
+        return render_template('7-states_list.html', items=1)
 
-    r_st = 'State.{}'.format(id)
-    if r_st in st:
-        return render_template(
-            '9-states.html',
-            st='State" {}'.format(st[r_st].name),
-            items=st[r_st])
+    for stg in st:
+        if State.id == id:
+            return render_template('9-states.html', lista=[stg], item=2)
 
-    return render_template('9-states.html', item=None)
+    return render_template('9-states.html', lista=None, item=0)
 
 
 @app.teardown_appcontext
