@@ -10,6 +10,7 @@
     <H1>States</H1>
     <UL>
         {% for s_t in lista|sort(attribute='name') %}
+        <LI>{{ s_t.id }}: <B>{{ s_t.name }}</B></LI>
         {% endfor %}
     </UL>
     {% else %}
