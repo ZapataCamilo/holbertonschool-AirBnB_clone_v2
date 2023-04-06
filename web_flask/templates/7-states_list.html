@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<HTML lang="en">
+    <HEAD>
+        <TITLE>HBNB</TITLE>
+    </HEAD>
+    <BODY>
+        <H1>States</H1>
+        <ul>
+            {% for ite in stg | sort(attrubute='name') %}
+            <li>{{ ite.id }}: {{ ite.name }}</li>
+            {% endfor %}
+        </ul>
+    </BODY>
+</HTML>
