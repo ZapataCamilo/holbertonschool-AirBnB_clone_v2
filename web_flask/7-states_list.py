@@ -8,7 +8,7 @@ app = Flask(__name__)
 
 
 @app.route('/states_list', strict_slashes=False)
-def index():
+def st_list():
     stg = storage.all(State).values()
     return render_template('7-states_list.html', stg=stg)
 
