@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>HBNB</title>
+</head>
+<body>
+    {% if itme %}
+    <H1>{{ st }}</H1>
+    <H3>Cites:</H3>
+    <UL>
+        {% for ct in items|sort(attribute="name") %}
+        <LI>{{ stg.id }}: <B>{{ stg.name }}</B></LI>
+        {% endfor %}
+    </UL>
+        {% else %}
+        <H1>Not found!</H1>
+        {% endif%}
+</body>
+</html>
