@@ -3,6 +3,8 @@
 from flask import Flask, render_template
 from models.state import State
 from models import storage
+from os import getenv
+env = getenv('HBNB_TYPE_STORAGE')
 
 app = Flask(__name__)
 
@@ -13,7 +15,7 @@ def path_st_list(id):
     st = storage.all(State).values()
 
     if not id:
-        return render_template('9-states.html', items=1)
+        return render_template('9-states.html', lista=st, items=1)
 
     for stg in st:
         if stg.id == id:
