@@ -13,7 +13,7 @@ def index():
     return render_template('7-states_list.html', stg=stg)
 
 @app.teardown_appcontext
-def states_close():
+def teardown_db(exception):
     """Remove the current SQLAlchemy Session"""
     storage.close()
 
