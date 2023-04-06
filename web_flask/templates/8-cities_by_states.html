@@ -9,7 +9,7 @@
         {% for st in stg|sort(attribute="name") %}
         <LI>{{ st.id }}: <B>{{ st.name }}</B></LI>
         <UL>
-            {% for ct in stg.cities|sort(attribute="name") %}
+            {% for ct in st.cities|sort(attribute="name") %}
             <LI>{{ ct.cities }}: <B>{{ ct.name}}</B></LI>
             {% endfor %}
         </UL>
