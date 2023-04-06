@@ -15,7 +15,7 @@ def path_st_list(id):
 
     if not id:
         return render_template('7-states_list.html', items=st)
-    
+
     r_st = 'State.{}'.format(id)
     if r_st in st:
         return render_template(
@@ -24,7 +24,6 @@ def path_st_list(id):
             items=st[r_st])
 
     return render_template('9-states.html', item=None)
-
 
 
 @app.teardown_appcontext
