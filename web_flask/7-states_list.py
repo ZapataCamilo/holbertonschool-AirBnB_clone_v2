@@ -10,8 +10,8 @@ app = Flask(__name__)
 
 @app.route('/states_list', strict_slashes=False)
 def st_list():
-    st = storage.all(State).values()
-    return render_template('7-states_list.html', st=st)
+    stg = storage.all(State).values()
+    return render_template('7-states_list.html', stg=stg)
 
 
 @app.teardown_appcontext
@@ -21,4 +21,4 @@ def teardown_db(exception):
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0')
+    app.run(host='0.0.0.0', debug=True)
