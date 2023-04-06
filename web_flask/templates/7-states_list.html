@@ -7,7 +7,7 @@
         <H1>States</H1>
         <ul>
             {% for ite in stg | sort(attrubute='name') %}
-            <li>{{ ite.id }}: {{ ite.name }}</li>
+            <li>{{ ite.id }}: <b>{{ ite.name }}</b></li>
             {% endfor %}
         </ul>
     </BODY>
