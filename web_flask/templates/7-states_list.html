@@ -5,10 +5,10 @@
     </HEAD>
     <BODY>
         <H1>States</H1>
-        <ul>
+        <UL>
             {% for ite in stg | sort(attrubute='name') %}
-            <li>{{ ite.id }}: <b>{{ ite.name }}</b></li>
+            <LI>{{ ite.id }}: <b>{{ ite.name }}</b></LI>
             {% endfor %}
-        </ul>
+        </UL>
     </BODY>
 </HTML>
