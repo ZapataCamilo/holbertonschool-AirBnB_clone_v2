@@ -4,12 +4,11 @@ from flask import Flask, render_template
 from models.state import State
 from models import storage
 
-
 app = Flask(__name__)
 
 
-@app.route('/states', defaults={'id': None}, strict_slashes=False)
-@app.route('/states/<path:id>', strict_slashes=False)
+@app.route('/states/', strict_slashes=False)
+@app.route('/states/<id>', strict_slashes=False)
 def path_st_list(id):
     st = storage.all(State).values()
 
