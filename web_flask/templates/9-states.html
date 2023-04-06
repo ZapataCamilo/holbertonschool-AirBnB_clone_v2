@@ -1,25 +1,25 @@
 <!DOCTYPE html>
 <HTML lang="en">
-<HEAD>
-    <TITLE>HBNB</TITLE>
-</HEAD>
-<BODY>
+    <HEAD>
+        <TITLE>HBNB</TITLE>
+    </HEAD>
+    <BODY>
     {% if not lista and items == 0 %}
-    <H1>Not found!</H1>
+        <H1>Not found!</H1>
     {%  elif items == 1 %}
-    <H1>States</H1>
-    <UL>
-        {% for s_t in lista|sort(attribute='name') %}
-        <LI>{{ s_t.id }}: <B>{{ s_t.name }}</B></LI>
-        {% endfor %}
-    </UL>
+        <H1>States</H>
+        <UL>
+            {% for s_t in lista|sort(attribute='name') %}
+                <LI>{{ s_t.id }}: <B>{{ s_t.name }}</B></LI>
+            {% endfor %}
+        </UL>
     {% else %}
-    <H1>State: {{ lista[0].name}}</H1>
-    <H3>Cities:</H3>
-    <Ul>
-        {% for ct in lista[0].cities|sort(attribute='name') %}
-        <LI>{{ ct.id }}: <B>{{ ct.name }}</B></LI>
-    </Ul>
+        <H1>State: {{ lista[0].name}}</H1>
+        <H3>Cities:</H>
+        <Ul>
+            {% for ct in lista[0].cities|sort(attribute='name') %}
+                <LI>{{ ct.id }}: <B>{{ ct.name }}</B></LI>
+        </Ul>
     {% endif %}
-</BODY>
+    </BODY>
 </HTML>
