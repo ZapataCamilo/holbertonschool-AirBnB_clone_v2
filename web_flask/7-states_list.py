@@ -9,8 +9,10 @@ app = Flask(__name__)
 
 @app.route('/states_list', strict_slashes=False)
 def st_list():
+    """Displays a HTML page with a list of states"""
     stg = storage.all(State).values()
     return render_template('7-states_list.html', stg=stg)
+
 
 @app.teardown_appcontext
 def teardown_db(exception):
